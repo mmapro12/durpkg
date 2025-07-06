@@ -180,19 +180,6 @@ update = turkman update
 | `remove` | Paketi kaldırır | Manuel çalıştırma |
 | `update` | Paketi günceller | Manuel çalıştırma |
 
-### Çok Satırlı Script Yazımı
-
-```ini
-[scripts]
-install = """
-echo "Kurulum başlıyor..."
-cd /tmp/paket-adi
-chmod +x install.sh
-./install.sh
-echo "Kurulum tamamlandı!"
-"""
-```
-
 ## Örnekler
 
 ### Örnek 1: DEB Paketi Kurulumu
