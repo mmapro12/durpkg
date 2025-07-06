@@ -180,6 +180,47 @@ update = turkman update
 | `remove` | Paketi kaldırır | Manuel çalıştırma |
 | `update` | Paketi günceller | Manuel çalıştırma |
 
+### Çok Satırlı Script Yazımı
+
+#### Normal INI (Tek Satır)
+```ini
+[database]
+host = localhost
+port = 5432
+description = Kısa açıklama
+```
+
+#### Multi-line INI (Çok Satırlı)
+```ini
+[database]
+host = localhost
+query = SELECT id, name, email
+    FROM users 
+    WHERE active = 1
+    ORDER BY created_date DESC
+port = 5432
+description = Bu bir uzun açıklama
+    ikinci satır burada
+    üçüncü satır burada
+```
+
+**En önemli kural:** Çok satırlı değerin devam eden satırları **mutlaka boşluk** veya **tab** ile başlamalıdır.
+
+#### ✅ Doğru Kullanım
+```ini
+install = chmod +x install.sh 
+    ./install.sh
+    echo "Bitti..."
+```
+
+#### ❌ Yanlış Kullanım
+```ini
+install = chmod +x install.sh 
+./install.sh
+echo "Bitti..."
+```
+Son iki satır boşlukla başlamadığı için ayrı key'ler olarak algılanır!
+
 ## Örnekler
 
 ### Örnek 1: DEB Paketi Kurulumu
@@ -198,17 +239,12 @@ help_command = "turkman --help"
 help_page = "https://github.com/turkman/turkman/issues"
 
 [scripts]
-setup = """
-sudo apt update
-sudo apt install -y manpages-tr
-"""
+setup = sudo apt update
+        sudo apt install -y manpages-tr
 
-install = ""
+install = 
 
-config = """
-echo "Turkman başarıyla kuruldu!"
-echo "Kullanım: turkman <komut>"
-"""
+config = turkman db sync
 ```
 
 ### Örnek 2: Kaynak Koddan Kurulum
@@ -230,7 +266,6 @@ setup = sudo apt install -y build-essential cmake
 install = ./install.sh
 
 config = echo "my-tool kuruldu!"
-
 ```
 
 ## Güvenlik
