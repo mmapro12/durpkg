@@ -95,7 +95,7 @@ int safe_execute(const char *command) {
         }
         
         // Tehlikeli karakterleri kontrol et
-        if (strpbrk(command, ";&|`$")) {
+        if (strpbrk(command, ";|`$")) {
                 printf(COLOR_RED "HATA:" COLOR_RESET " Tehlikeli karakterler tespit edildi!\n");
                 return -1;
         }
