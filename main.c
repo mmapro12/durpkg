@@ -60,6 +60,7 @@ static int ini_read(void* user, const char* section, const char* name,
                         int num = (int)strtol(value, &endptr, 10);
                         if (*endptr != '\0')
                                 return 0;
+                        pkgf->needs = num;
 
                 } else if (strcmp(name, "install_type") == 0) {
                         strncpy(pkgf->install_type, value, sizeof(pkgf->install_type));
@@ -82,17 +83,16 @@ static int ini_read(void* user, const char* section, const char* name,
 
         } else if (strcmp(section, "scripts") == 0) {
                 if (strcmp(name, "setup") == 0) {
-                        strncpy(pkgf->setup, value, sizeof(pkgf->setup));
-                        clear_quotes(pkgf->setup);
+                        strncat(pkgf->setup, value, sizeof(pkgf->setup) - strlen(pkgf->setup) - 1);
+                        strncat(pkgf->setup, "\n", sizeof(pkgf->setup) - strlen(pkgf->setup) - 1);
 
                 } else if (strcmp(name, "install") == 0) {
                         strncat(pkgf->install, value, sizeof(pkgf->install) - strlen(pkgf->install) - 1);
                         strncat(pkgf->install, "\n", sizeof(pkgf->install) - strlen(pkgf->install) - 1);
-                        printf("install value: %s\n", value);
 
                 } else if (strcmp(name, "config") == 0) {
-                        strncpy(pkgf->config, value, sizeof(pkgf->config));
-                        clear_quotes(pkgf->config);
+                        strncat(pkgf->config, value, sizeof(pkgf->config) - strlen(pkgf->config) - 1);
+                        strncat(pkgf->config, "\n", sizeof(pkgf->config) - strlen(pkgf->config) - 1);
 
                 } else
                         return 0;
@@ -263,14 +263,12 @@ int install_package(pkgfile *pkg) {
                 
                 char command[MAX_SCRIPT_LENGTH + 256];
                 snprintf(command, sizeof(command), "mkdir -p %s/%s", TEMP_DIR, pkg->name);
-                
                 if (safe_execute(command) != 0) {
                         printf(COLOR_RED "HATA:" COLOR_RESET " Paket yüklenemedi\n");
                         return -1;
                 }
 
                 snprintf(command, sizeof(command), "cd %s/%s && %s", TEMP_DIR, pkg->name, pkg->install);
-                
                 if (safe_execute(command) != 0) {
                         printf(COLOR_RED "HATA:" COLOR_RESET " Paket yüklenemedi\n");
                         return -1;
@@ -287,11 +285,9 @@ int install_package(pkgfile *pkg) {
         }
         
         // Geçici dosyaları temizle
-        if (pkg->needs) {
-                char command[512];
-                snprintf(command, sizeof(command), "rm -rf %s/%s", TEMP_DIR, pkg->name);
-                safe_execute(command);
-        }
+        char command[512];
+        snprintf(command, sizeof(command), "rm -rf %s/%s", TEMP_DIR, pkg->name);
+        safe_execute(command);
         
         if (result == 0) {
                 printf(COLOR_GREEN "✓ Paket başarıyla yüklendi: %s" COLOR_RESET "\n", pkg->name);
