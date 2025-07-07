@@ -38,18 +38,23 @@ static int ini_read(void* user, const char* section, const char* name,
                 if (strcmp(name, "name") == 0) {
                         strncpy(pkgf->name, value, sizeof(pkgf->name));
                         clear_quotes(pkgf->name);
+
                 } else if (strcmp(name, "author") == 0) {
                         strncpy(pkgf->author, value, sizeof(pkgf->author));
                         clear_quotes(pkgf->author);
+
                 } else if (strcmp(name, "version") == 0) {
                         strncpy(pkgf->version, value, sizeof(pkgf->version));
                         clear_quotes(pkgf->version);
+
                 } else if (strcmp(name, "description") == 0) {
                         strncpy(pkgf->description, value, sizeof(pkgf->description));
                         clear_quotes(pkgf->description);
+
                 } else if (strcmp(name, "source") == 0) {
                         strncpy(pkgf->source, value, sizeof(pkgf->source));
                         clear_quotes(pkgf->source);
+
                 } else if (strcmp(name, "needs") == 0) {
                         char *endptr;
                         int num = (int)strtol(value, &endptr, 10);
@@ -59,15 +64,19 @@ static int ini_read(void* user, const char* section, const char* name,
                 } else if (strcmp(name, "install_type") == 0) {
                         strncpy(pkgf->install_type, value, sizeof(pkgf->install_type));
                         clear_quotes(pkgf->install_type);
+
                 } else if (strcmp(name, "deb_source") == 0) {
                         strncpy(pkgf->deb_source, value, sizeof(pkgf->deb_source));
-                        clear_quotes(pkgf->install_type);
+                        clear_quotes(pkgf->deb_source);
+
                 } else if (strcmp(name, "help_command") == 0) {
                         strncpy(pkgf->help_command, value, sizeof(pkgf->help_command));
                         clear_quotes(pkgf->help_command);
+
                 } else if (strcmp(name, "help_page") == 0) {
                         strncpy(pkgf->help_page, value, sizeof(pkgf->help_page));
                         clear_quotes(pkgf->help_page);
+
                 } else
                         return 0;
 
@@ -75,12 +84,15 @@ static int ini_read(void* user, const char* section, const char* name,
                 if (strcmp(name, "setup") == 0) {
                         strncpy(pkgf->setup, value, sizeof(pkgf->setup));
                         clear_quotes(pkgf->setup);
+
                 } else if (strcmp(name, "install") == 0) {
                         strncpy(pkgf->install, value, sizeof(pkgf->install));
                         clear_quotes(pkgf->install);
+
                 } else if (strcmp(name, "config") == 0) {
                         strncpy(pkgf->config, value, sizeof(pkgf->config));
                         clear_quotes(pkgf->config);
+
                 } else
                         return 0;
         } else 
@@ -346,6 +358,8 @@ int main(int argc, char *argv[]) {
                 printf(COLOR_RED "HATA:" COLOR_RESET " Pkgfile parse edilemedi\n");
                 return 1;
         }
+
+        printf("INSTALL_KOMUT_DEBUG: %s", pkg->install);
     
         // Geçici dizini oluştur
         char command[256];

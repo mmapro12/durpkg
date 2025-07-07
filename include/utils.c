@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
 #include "utils.h"
 
 
@@ -17,21 +16,12 @@ int asknget(char *message) {
 }
 
 void clear_quotes(char* str) {
-        char *start = str;
-        char *end = str + strlen(str) - 1;
-        
-        while (isspace(*start)) start++;
-        
-        while (end > start && isspace(*end)) end--;
-        
-        if (*start == '"' && *end == '"') {
-                start++;
-                end--;
-        }
-        
-        size_t len = end - start + 1;
-        memmove(str, start, len);
-        str[len] = '\0';
+    size_t len = strlen(str);
+    if (len >= 2 && str[0] == '"' && str[len - 1] == '"') {
+        // Shift string left
+        memmove(str, str + 1, len - 2);
+        str[len - 2] = '\0';
+    }
 }
 
 void print_help(void) {

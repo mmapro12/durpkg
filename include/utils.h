@@ -10,7 +10,7 @@
 #define COLOR_RESET "\033[0m"
 
 // ask to continue and get the answer y or n 
-int asknget(char *message);
+int asknget(char*);
 
 // Clears the "'s that are in string
 void clear_quotes(char*);
