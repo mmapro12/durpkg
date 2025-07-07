@@ -86,8 +86,9 @@ static int ini_read(void* user, const char* section, const char* name,
                         clear_quotes(pkgf->setup);
 
                 } else if (strcmp(name, "install") == 0) {
-                        strncpy(pkgf->install, value, sizeof(pkgf->install));
-                        clear_quotes(pkgf->install);
+                        strncat(pkgf->install, value, sizeof(pkgf->install) - strlen(pkgf->install) - 1);
+                        strncat(pkgf->install, "\n", sizeof(pkgf->install) - strlen(pkgf->install) - 1);
+                        printf("install value: %s\n", value);
 
                 } else if (strcmp(name, "config") == 0) {
                         strncpy(pkgf->config, value, sizeof(pkgf->config));
@@ -261,11 +262,14 @@ int install_package(pkgfile *pkg) {
                 printf(COLOR_BLUE "Paket yükleniyor..." COLOR_RESET "\n");
                 
                 char command[MAX_SCRIPT_LENGTH + 256];
-                if (pkg->needs) {
-                        snprintf(command, sizeof(command), "cd %s/%s && %s", TEMP_DIR, pkg->name, pkg->install);
-                } else {
-                        strncpy(command, pkg->install, sizeof(command) - 1);
+                snprintf(command, sizeof(command), "mkdir -p %s/%s", TEMP_DIR, pkg->name);
+                
+                if (safe_execute(command) != 0) {
+                        printf(COLOR_RED "HATA:" COLOR_RESET " Paket yüklenemedi\n");
+                        return -1;
                 }
+
+                snprintf(command, sizeof(command), "cd %s/%s && %s", TEMP_DIR, pkg->name, pkg->install);
                 
                 if (safe_execute(command) != 0) {
                         printf(COLOR_RED "HATA:" COLOR_RESET " Paket yüklenemedi\n");
