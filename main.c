@@ -13,6 +13,7 @@
 
 
 static int silent = 0;
+static int check = 0;
 
 typedef struct {
         char name[MAX_FIELD_LENGTH];          // Paket ismi
@@ -189,6 +190,59 @@ int download_source(pkgfile *pkg) {
         return 0;
 }
 
+int check_pkgfile(pkgfile *pkg) {
+        int r = 0;
+        if (strlen(pkg->name) <= 0) {
+                printf("CHECK: PACKAGE NAME\n");
+                r = 1;
+        }
+        if (strlen(pkg->author) <= 0) {
+                printf("CHECK: PACKAGE AUTHOR\n");
+                r = 1;
+        }
+        if (strlen(pkg->version) <= 0) {
+                printf("CHECK: PACKAGE VERSION\n");
+                r = 1;
+        }
+        if (strlen(pkg->description) <= 0) {
+                printf("CHECK: PACKAGE DESCRIPTION\n");
+                r = 1;
+        }
+        if (strlen(pkg->version) <= 0) {
+                printf("CHECK: PACKAGE VERSION\n");
+                r = 1;
+        }
+        if (strlen(pkg->source) <= 0) {
+                printf("CHECK: PACKAGE SOURCE\n");
+                r = 1;
+        }
+        if (check_url_exists(pkg->source) == 1) {
+                printf("CHECK: PACKAGE SOURCE URL\n");
+                r = 1;
+        }
+        if (pkg->needs != 1 && pkg->needs != 0) {
+                printf("CHECK: PACKAGE NEEDS BOOL\n");
+                r = 1;
+        }
+        if (strcmp(pkg->install_type, "deb") != 0 && strcmp(pkg->install_type, "script")) {
+                printf("CHECK: PACKAGE INSTALL_TYPE\n");
+                r = 1;
+        }
+        if (strcmp(pkg->install_type, "deb") == 0) {
+                if (check_url_exists(pkg->deb_source) != 0) {
+                        printf("CHECK: DEB_SOURCE\n");
+                        r = 1;
+                }
+        }
+        if (strcmp(pkg->install_type, "script") == 0) {
+                if (strlen(pkg->install) <= 0) {
+                        printf("CHECK: INSTALL SCRIPT\n");
+                        r = 1;
+                }
+        }
+        return r;
+}
+
 int install_deb_package(pkgfile *pkg) {
         if (strlen(pkg->deb_source) == 0) {
                 return 0;
@@ -268,7 +322,12 @@ int install_package(pkgfile *pkg) {
                         return -1;
                 }
 
-                snprintf(command, sizeof(command), "cd %s/%s && %s", TEMP_DIR, pkg->name, pkg->install);
+                if (strlen(pkg->install) <= 0) {
+                        snprintf(command, sizeof(command), "cd %s/%s", TEMP_DIR, pkg->name);
+                } else {
+                        snprintf(command, sizeof(command), "cd %s/%s && %s", TEMP_DIR, pkg->name, pkg->install);
+                }
+
                 if (safe_execute(command) != 0) {
                         printf(COLOR_RED "HATA:" COLOR_RESET " Paket yüklenemedi\n");
                         return -1;
@@ -318,6 +377,8 @@ int parse_arguments(int argc, char *argv[], char **pkgf) {
                         return 0;
                 } else if (strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--silent") == 0) {
                         silent = 1;
+                } else if (strcmp(argv[i], "-c") == 0 || strcmp(argv[i], "--check") == 0) {
+                        check = 1;
                 } else if (argv[i][0] == '-') {
                         printf(COLOR_RED "HATA:" COLOR_RESET " Bilinmeyen seçenek: %s\n", argv[i]);
                         return -1;
@@ -359,8 +420,15 @@ int main(int argc, char *argv[]) {
                 return 1;
         }
 
-        printf("INSTALL_KOMUT_DEBUG: %s", pkg->install);
-    
+        int cpkgf = check_pkgfile(pkg);
+        if (cpkgf == 1) {
+                printf(COLOR_RED "HATA:" COLOR_RESET " Pkgfile hatalı\n");
+                return 1;
+        }
+        if (check == 1) {
+                return 0;
+        }
+
         // Geçici dizini oluştur
         char command[256];
         snprintf(command, sizeof(command), "mkdir -p %s", TEMP_DIR);

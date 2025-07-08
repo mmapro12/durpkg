@@ -19,4 +19,8 @@ void print_help(void);
 
 void print_version(void);
 
+int validate_url(char*);
+
+int check_url_exists(const char*);
+
 #endif // !UTILS_H
