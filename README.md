@@ -2,7 +2,7 @@
 
 **durpkg** - Debian sistemleri için minimalist, güvenli ve kullanıcı dostu paket yükleyici
 
-## 📋 İçindekiler
+## İçindekiler
 
 - [Nedir?](#nedir)
 - [Özellikler](#özellikler)
@@ -19,15 +19,15 @@
 
 ### Neden durpkg?
 
-- 🎯 **Basit ve Odaklı**: Sadece paket yükleme işine odaklanır
-- 🛡️ **Güvenli**: Command injection koruması ve güvenlik kontrolleri
-- 🎨 **Kullanıcı Dostu**: Renkli çıktılar ve açık hata mesajları
-- 📝 **Kolay Pkgfile**: INI formatında basit paket tanımlama
-- 🚀 **Hızlı**: Minimal bağımlılık, hızlı çalışma
+- **Basit ve Odaklı**: Sadece paket yükleme işine odaklanır
+- **Güvenli**: Command injection koruması ve güvenlik kontrolleri
+- **Kullanıcı Dostu**: Renkli çıktılar ve açık hata mesajları
+- **Kolay Pkgfile**: INI formatında basit paket tanımlama
+- **Hızlı**: Minimal bağımlılık, hızlı çalışma
 
 ## Özellikler
 
-### ✅ Temel Özellikler
+### Temel Özellikler
 
 - **Çoklu Yükleme Tipi**: DEB paketi, kaynak kod, özel script desteği
 - **Otomatik Kaynak İndirme**: Git repository'lerinden otomatik kod indirme
@@ -55,6 +55,7 @@
 - GCC derleyicisi
 - Git (kaynak kod indirme için)
 - wget (DEB paketleri için)
+- curl (C kütüphaneside kullanım)
 
 ### İndirme
 
@@ -71,7 +72,7 @@ chmod +x install.sh
 
 ```bash
 # Basit paket yükleme
-durpkg paket.ini
+durpkg pkgfile.paket.ini
 ```
 
 ### Komut Satırı Seçenekleri
@@ -85,6 +86,7 @@ durpkg [SEÇENEKLER] <pkgfile>
 | `--help` | `-h` | Yardım mesajını göster |
 | `--version` | `-v` | Sürüm bilgisini göster |
 | `--silent` | `-s` | Sessiz mod (onay istemez) |
+| `--check` | `-c` | Pkgfile'ın doğru biçimde olduğunu kontrol et |
 
 ### Kullanım Örnekleri
 
@@ -93,7 +95,7 @@ durpkg [SEÇENEKLER] <pkgfile>
 durpkg pkgfile.turkman.ini
 
 # Sessiz kurulum (CI/CD için ideal)
-durpkg -s paket.ini
+durpkg -s pkgfile.paket.ini
 
 # Yardım alma
 durpkg --help

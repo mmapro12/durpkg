@@ -9,6 +9,8 @@
 #define COLOR_CYAN "\033[36m"
 #define COLOR_RESET "\033[0m"
 
+#define VERSION "0.1.0"
+
 // ask to continue and get the answer y or n 
 int asknget(char*);
 

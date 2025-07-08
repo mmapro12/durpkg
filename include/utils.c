@@ -33,6 +33,7 @@ void print_help(void) {
         printf("Seçenekler:\n");
         printf("  -h, --help         Bu yardım mesajını göster\n");
         printf("  -s, --silent   Sessiz mod\n");
+        printf("  -c, --check   Pkgfile kontrol et\n");
         printf("  -v, --version  Sürüm bilgisini göster\n\n");
         printf("Örnek:\n");
         printf("  durpkg paket.ini\n");
@@ -40,7 +41,7 @@ void print_help(void) {
 }
 
 void print_version(void) {
-        printf("durpkg 0.1.0\n");
+        printf("durpkg %s\n", VERSION);
 }
 
 int validate_url(char* url) {
